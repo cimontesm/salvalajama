@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Salva la Jama",
+    "slug": "salva-la-jama",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "salvalajama",
+    "extra": {
+      "apiBaseUrl": "http://192.168.100.104:8000/api/v1",
+      "googleMapsApiKey": ""
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "ec.espol.salvalajama"
+    },
+    "android": {
+      "package": "ec.espol.salvalajama",
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": ""
+        }
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
