@@ -1,0 +1,93 @@
+# =========================================
+# Salva la Jama — monorepo .gitignore
+# Estructura: backend/ (Laravel) · mobile/ (Expo/React Native)
+# =========================================
+
+# --- Backend (Laravel / PHP) ---
+backend/vendor/
+backend/node_modules/
+backend/.env
+backend/.env.backup
+backend/.env.production
+backend/.phpunit.result.cache
+backend/Homestead.json
+backend/Homestead.yaml
+backend/npm-debug.log
+backend/yarn-error.log
+backend/storage/*.key
+backend/storage/app/*
+!backend/storage/app/public
+!backend/storage/app/.gitignore
+backend/storage/framework/cache/*
+!backend/storage/framework/cache/.gitignore
+backend/storage/framework/sessions/*
+!backend/storage/framework/sessions/.gitignore
+backend/storage/framework/testing/*
+!backend/storage/framework/testing/.gitignore
+backend/storage/framework/views/*
+!backend/storage/framework/views/.gitignore
+backend/storage/logs/*
+!backend/storage/logs/.gitignore
+backend/bootstrap/cache/*
+!backend/bootstrap/cache/.gitignore
+backend/public/hot
+backend/public/storage
+backend/auth.json
+
+# --- Frontend (Expo / React Native) ---
+mobile/node_modules/
+mobile/.expo/
+mobile/.expo-shared/
+mobile/dist/
+mobile/web-build/
+mobile/*.jks
+mobile/*.p8
+mobile/*.p12
+mobile/*.key
+mobile/*.mobileprovision
+mobile/*.orig.*
+mobile/.env
+mobile/.env.local
+mobile/google-services.json
+mobile/GoogleService-Info.plist
+mobile/android/
+mobile/ios/
+mobile/expo-env.d.ts
+mobile/.metro-health-check*
+
+# EAS / Expo
+.expo/
+.easignore
+
+# --- Node genérico (por si hay más paquetes) ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# --- Entornos / secretos ---
+.env
+.env.*
+!.env.example
+
+# --- Editores / SO ---
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Logs y temporales ---
+*.log
+.cache/
+.tmp/
+tmp/
+
+CLAUDE.md
+
+# zip temporal de transferencia (puedes borrarlo)
+*.zip
