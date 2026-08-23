@@ -14,3 +14,13 @@ export async function cancelReservation(id) {
   const { data } = await client.patch(`/reservations/${id}/cancel`);
   return data.data;
 }
+
+export async function getEstablishmentReservations() {
+  const { data } = await client.get('/reservations');
+  return data.data;
+}
+
+export async function updateReservationStatus(id, status) {
+  const { data } = await client.patch(`/establishment/reservations/${id}/status`, { status });
+  return data.data;
+}
