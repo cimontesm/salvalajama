@@ -22,7 +22,7 @@ return new class extends Migration
             $table->dateTime('pickup_start');
             $table->dateTime('pickup_end');
             $table->dateTime('expires_at')->nullable();
-            $table->string('image_url')->nullable();
+            $table->text('image_url')->nullable();
             $table->enum('status', ['activo', 'agotado', 'vencido', 'inactivo'])->default('activo');
             $table->timestamps();
         });
