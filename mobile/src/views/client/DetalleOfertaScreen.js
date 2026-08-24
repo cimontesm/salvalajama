@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import Screen from '../../components/Screen';
 import { colors, spacing, radius, typography } from '../../config/theme';
 import { getPackage } from '../../services/packages.service';
@@ -38,6 +39,13 @@ export default function DetalleOfertaScreen({ route, navigation }) {
 
   return (
     <Screen title={pkg?.title} subtitle={pkg?.establishment?.name}>
+      {pkg?.image_url ? (
+        <Image source={{ uri: pkg.image_url }} style={styles.image} resizeMode="cover" />
+      ) : (
+        <View style={[styles.image, styles.imagePlaceholder]}>
+          <Ionicons name="restaurant-outline" size={40} color={colors.primaryLight} />
+        </View>
+      )}
       <View style={styles.card}>
         <Text style={styles.description}>{pkg?.description}</Text>
         <View style={styles.priceRow}>
@@ -63,6 +71,8 @@ export default function DetalleOfertaScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+  image: { width: '100%', height: 180, borderRadius: radius.lg, marginBottom: spacing.md },
+  imagePlaceholder: { backgroundColor: colors.surface, justifyContent: 'center', alignItems: 'center' },
   card: {
     backgroundColor: colors.surface,
     borderRadius: radius.lg,

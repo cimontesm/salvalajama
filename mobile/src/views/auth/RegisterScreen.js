@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 import Screen from '../../components/Screen';
+import PasswordInput from '../../components/PasswordInput';
 import { colors, spacing, radius, typography } from '../../config/theme';
 import { useAuthViewModel } from '../../viewmodels/useAuthViewModel';
 
@@ -43,16 +44,11 @@ export default function RegisterScreen({ navigation }) {
       </View>
       <View style={styles.field}>
         <Text style={styles.label}>Contraseña</Text>
-        <TextInput style={styles.input} value={form.password} onChangeText={(v) => setField('password', v)} secureTextEntry />
+        <PasswordInput value={form.password} onChangeText={(v) => setField('password', v)} />
       </View>
       <View style={styles.field}>
         <Text style={styles.label}>Confirmar contraseña</Text>
-        <TextInput
-          style={styles.input}
-          value={form.password_confirmation}
-          onChangeText={(v) => setField('password_confirmation', v)}
-          secureTextEntry
-        />
+        <PasswordInput value={form.password_confirmation} onChangeText={(v) => setField('password_confirmation', v)} />
       </View>
       <View style={styles.field}>
         <Text style={styles.label}>Tipo de cuenta</Text>

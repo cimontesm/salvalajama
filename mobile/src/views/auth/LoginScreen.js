@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 import Screen from '../../components/Screen';
+import PasswordInput from '../../components/PasswordInput';
 import { colors, spacing, radius, typography } from '../../config/theme';
 import { useAuthViewModel } from '../../viewmodels/useAuthViewModel';
 
@@ -32,13 +33,7 @@ export default function LoginScreen({ navigation }) {
       </View>
       <View style={styles.field}>
         <Text style={styles.label}>Contraseña</Text>
-        <TextInput
-          style={styles.input}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          placeholder="••••••••"
-        />
+        <PasswordInput value={password} onChangeText={setPassword} />
       </View>
       <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={isSubmitting}>
         <Text style={styles.buttonText}>{isSubmitting ? 'Ingresando…' : 'Ingresar'}</Text>

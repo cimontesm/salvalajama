@@ -110,6 +110,7 @@ class DemoSeeder extends Seeder
             'estimated_weight_kg' => 1.2,
             'pickup_start' => now()->setTime(18, 0),
             'pickup_end' => now()->setTime(20, 0),
+            'image_url' => 'https://placehold.co/600x400/2E7D32/FFFFFF?text=Funda+de+Pan',
             'status' => 'activo',
         ]);
 
@@ -125,6 +126,7 @@ class DemoSeeder extends Seeder
             'estimated_weight_kg' => 0.9,
             'pickup_start' => now()->setTime(18, 0),
             'pickup_end' => now()->setTime(20, 0),
+            'image_url' => 'https://placehold.co/600x400/2E7D32/FFFFFF?text=Bizcochos',
             'status' => 'activo',
         ]);
 
@@ -140,6 +142,7 @@ class DemoSeeder extends Seeder
             'estimated_weight_kg' => 3.0,
             'pickup_start' => now()->setTime(19, 0),
             'pickup_end' => now()->setTime(21, 0),
+            'image_url' => 'https://placehold.co/600x400/2E7D32/FFFFFF?text=Frutas',
             'status' => 'activo',
         ]);
 
@@ -155,6 +158,7 @@ class DemoSeeder extends Seeder
             'estimated_weight_kg' => 2.5,
             'pickup_start' => now()->setTime(19, 0),
             'pickup_end' => now()->setTime(21, 0),
+            'image_url' => 'https://placehold.co/600x400/2E7D32/FFFFFF?text=Lacteos',
             'status' => 'activo',
         ]);
 
@@ -170,6 +174,7 @@ class DemoSeeder extends Seeder
             'estimated_weight_kg' => 0.6,
             'pickup_start' => now()->setTime(17, 0),
             'pickup_end' => now()->setTime(19, 0),
+            'image_url' => 'https://placehold.co/600x400/2E7D32/FFFFFF?text=Desayuno',
             'status' => 'activo',
         ]);
 
@@ -185,6 +190,7 @@ class DemoSeeder extends Seeder
             'estimated_weight_kg' => 0.8,
             'pickup_start' => now()->setTime(17, 0),
             'pickup_end' => now()->setTime(19, 0),
+            'image_url' => 'https://placehold.co/600x400/2E7D32/FFFFFF?text=Postres',
             'status' => 'activo',
         ]);
 
