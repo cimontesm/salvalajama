@@ -1,7 +1,7 @@
 import client from '../api/client';
 
-// TODO(sprint): implementar llamadas reales a /impact (ver CLAUDE.md 5.5).
-// Se deja el cliente ya importado para que el siguiente sprint solo agregue
-// las funciones (getImpact, create..., etc.) sin tocar api/client.js.
-
+export async function getImpact() {
+  const { data } = await client.get('/impact');
+  return data.data;
+}
 export default client;

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Requests\CreateReservationRequest;
 use App\Http\Resources\ReservationResource;
+use App\Models\AppNotification;
 use App\Models\Package;
 use App\Models\Reservation;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rule;
 
 class ReservationController
 {
@@ -26,6 +28,23 @@ class ReservationController
             'success' => true,
             'data' => [
                 'active' => ReservationResource::collection($reservations->where('status', 'reservado')->values()),
+                'history' => ReservationResource::collection($reservations->whereIn('status', ['retirado', 'cancelado'])->values()),
+            ],
+        ]);
+    }
+
+    private function establishmentIndex(Request $request)
+    {
+        $establishment = $request->user()->establishment;
+        if (! $establishment) return response()->json(['success' => false, 'message' => 'No tienes un establecimiento asociado.'], 422);
+
+        $reservations = Reservation::with(['package', 'user'])
+            ->where('establishment_id', $establishment->id)->orderByDesc('created_at')->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'pending' => ReservationResource::collection($reservations->where('status', 'reservado')->values()),
                 'history' => ReservationResource::collection($reservations->whereIn('status', ['retirado', 'cancelado'])->values()),
             ],
         ]);
@@ -82,7 +101,32 @@ class ReservationController
                     'pickup_deadline' => $package->pickup_end,
                 ]);
 
-                return $reservation->load(['package', 'establishment']);
+                $establishmentOwnerId = $package->establishment?->user_id;
+                if ($establishmentOwnerId) {
+                    AppNotification::create([
+                        'user_id' => $establishmentOwnerId, 'type' => 'new_reservation',
+                        'title' => 'Nueva reserva',
+                        'body' => "Se reservó {$quantity} unidad(es) de {$package->title}.",
+                        'data' => ['reservation_id' => $reservation->id, 'package_id' => $package->id],
+                    ]);
+                    if ($package->quantity_available <= 2) {
+                        AppNotification::create([
+                            'user_id' => $establishmentOwnerId, 'type' => 'low_stock',
+                            'title' => 'Últimas unidades',
+                            'body' => "{$package->title} tiene {$package->quantity_available} unidad(es) disponibles.",
+                            'data' => ['package_id' => $package->id],
+                        ]);
+                    }
+                }
+
+                AppNotification::create([
+                    'user_id' => $request->user()->id, 'type' => 'reservation_confirmed',
+                    'title' => 'Reserva confirmada',
+                    'body' => "Tu reserva {$reservation->code} fue confirmada. Retírala antes de {$package->pickup_end->format('H:i')}.",
+                    'data' => ['reservation_id' => $reservation->id],
+                ]);
+
+                return $reservation->load(['package', 'establishment', 'user']);
             });
         } catch (ValidationException $e) {
             return response()->json([
@@ -102,7 +146,7 @@ class ReservationController
     /**
      * Cancela la reserva y repone el stock del paquete.
      */
-    public function cancel(\Illuminate\Http\Request $request, Reservation $reservation)
+    public function cancel(Request $request, Reservation $reservation)
     {
         if ($reservation->user_id !== $request->user()->id) {
             return response()->json(['success' => false, 'message' => 'No tienes permiso para cancelar esta reserva.'], 403);
@@ -121,6 +165,15 @@ class ReservationController
                 $package->status = 'activo';
             }
             $package->save();
+
+            if ($package->establishment?->user_id) {
+                AppNotification::create([
+                    'user_id' => $package->establishment->user_id, 'type' => 'reservation_cancelled',
+                    'title' => 'Reserva cancelada',
+                    'body' => "La reserva {$reservation->code} fue cancelada y se repuso el stock.",
+                    'data' => ['reservation_id' => $reservation->id, 'package_id' => $package->id],
+                ]);
+            }
         });
 
         return response()->json([
@@ -128,6 +181,55 @@ class ReservationController
             'data' => new ReservationResource($reservation->fresh(['package', 'establishment'])),
             'message' => 'Reserva cancelada y stock repuesto.',
         ]);
+    }
+
+    public function updateStatus(Request $request, Reservation $reservation)
+    {
+        $establishment = $request->user()->establishment;
+        abort_unless($establishment && $reservation->establishment_id === $establishment->id, 403, 'No tienes permiso para actualizar este pedido.');
+
+        $data = $request->validate(['status' => ['required', Rule::in(['retirado', 'cancelado'])]]);
+        if ($reservation->status !== 'reservado') return response()->json(['success' => false, 'message' => 'Este pedido ya no está pendiente.'], 422);
+
+        DB::transaction(function () use ($reservation, $data) {
+            if ($data['status'] === 'cancelado') {
+                $reservation->update(['status' => 'cancelado']);
+                $package = $reservation->package()->lockForUpdate()->first();
+                $package->quantity_available += $reservation->quantity;
+                if ($package->status === 'agotado' && $package->quantity_available > 0) $package->status = 'activo';
+                $package->save();
+            } else {
+                $reservation->update(['status' => 'retirado', 'picked_up_at' => now()]);
+            }
+
+            AppNotification::create([
+                'user_id' => $reservation->user_id,
+                'type' => $data['status'] === 'retirado' ? 'reservation_picked_up' : 'reservation_cancelled_by_establishment',
+                'title' => $data['status'] === 'retirado' ? 'Pedido retirado' : 'Reserva cancelada',
+                'body' => $data['status'] === 'retirado'
+                    ? "Tu reserva {$reservation->code} fue marcada como retirada. ¡Gracias por rescatar alimentos!"
+                    : "La reserva {$reservation->code} fue cancelada por el establecimiento.",
+                'data' => ['reservation_id' => $reservation->id],
+            ]);
+        });
+
+        return response()->json(['success' => true, 'data' => new ReservationResource($reservation->fresh(['package', 'establishment'])), 'message' => 'Estado actualizado.']);
+    }
+
+    private function createPickupReminders(int $userId, $reservations): void
+    {
+        foreach ($reservations->where('status', 'reservado') as $reservation) {
+            $minutes = now()->diffInMinutes($reservation->pickup_deadline, false);
+            if ($minutes >= 0 && $minutes <= 60) {
+                $exists = AppNotification::where('user_id', $userId)->where('type', 'pickup_reminder')
+                    ->where('data->reservation_id', $reservation->id)->exists();
+                if (! $exists) AppNotification::create([
+                    'user_id' => $userId, 'type' => 'pickup_reminder', 'title' => 'Se acerca tu retiro',
+                    'body' => "Tu reserva {$reservation->code} debe retirarse antes de {$reservation->pickup_deadline->format('H:i')}.",
+                    'data' => ['reservation_id' => $reservation->id],
+                ]);
+            }
+        }
     }
 
     private function generateUniqueCode(): string

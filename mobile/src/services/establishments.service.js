@@ -1,7 +1,18 @@
 import client from '../api/client';
 
-// TODO(sprint): implementar llamadas reales a /establishments (ver CLAUDE.md 5.5).
-// Se deja el cliente ya importado para que el siguiente sprint solo agregue
-// las funciones (getEstablishments, create..., etc.) sin tocar api/client.js.
+const endpoint = '/establishments';
 
-export default client;
+const create = (data) => client.post(endpoint, data);
+
+const update = (id, data) => client.put(`${endpoint}/${id}`, data);
+
+const changeStatus = (id, status) => client.patch(`${endpoint}/${id}/status`, { status });
+
+const getProfile = (id) => client.get(`${endpoint}/${id}`);
+
+export default {
+    create,
+    update,
+    changeStatus,
+    getProfile
+};
