@@ -14,6 +14,7 @@ class ReservationResource extends JsonResource
             'code' => $this->code,
             'package' => new PackageResource($this->whenLoaded('package')),
             'establishment' => new EstablishmentResource($this->whenLoaded('establishment')),
+            'user' => new UserResource($this->whenLoaded('user')),
             'quantity' => $this->quantity,
             'unit_price' => (float) $this->unit_price,
             'total' => (float) $this->total,

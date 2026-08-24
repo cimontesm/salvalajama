@@ -16,8 +16,8 @@ export async function cancelReservation(id) {
 }
 
 export async function getEstablishmentReservations() {
-  const { data } = await client.get('/reservations');
-  return data.data;
+  const { data } = await client.get('/establishment/reservations');
+  return data.data; // { pending: [...], history: [...] }
 }
 
 export async function updateReservationStatus(id, status) {

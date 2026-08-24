@@ -13,7 +13,8 @@ class PackageController
     /**
      * Catálogo de ofertas. Filtros soportados (CLAUDE.md 5.5):
      * category, establishment_id, min_price, max_price, lat, lng, radius_km,
-     * available=true, q (búsqueda por título/descripción).
+     * available=true, q (búsqueda por título/descripción), time_range
+     * (mañana|tarde|noche, según la hora de pickup_start).
      */
     public function index(Request $request)
     {
@@ -45,6 +46,21 @@ class PackageController
                 $q->where('title', 'ilike', $term)
                     ->orWhere('description', 'ilike', $term);
             });
+        }
+
+        if ($request->filled('time_range')) {
+            $range = str_replace('ñ', 'n', mb_strtolower($request->string('time_range')));
+            switch ($range) {
+                case 'manana':
+                    $query->whereTime('pickup_start', '>=', '06:00:00')->whereTime('pickup_start', '<', '12:00:00');
+                    break;
+                case 'tarde':
+                    $query->whereTime('pickup_start', '>=', '12:00:00')->whereTime('pickup_start', '<', '18:00:00');
+                    break;
+                case 'noche':
+                    $query->whereTime('pickup_start', '>=', '18:00:00');
+                    break;
+            }
         }
 
         // Búsqueda por cercanía (fórmula de Haversine) si se envían lat/lng/radius_km.

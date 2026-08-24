@@ -16,6 +16,9 @@ export default function OfertasScreen({ navigation }) {
     category,
     setCategory,
     categories,
+    timeRange,
+    setTimeRange,
+    timeRanges,
     maxPrice,
     setMaxPrice,
     refresh,
@@ -45,6 +48,21 @@ export default function OfertasScreen({ navigation }) {
               onPress={() => setCategory(category === c ? null : c)}
             >
               <Text style={[styles.chipText, category === c && styles.chipTextActive]}>{c}</Text>
+            </TouchableOpacity>
+          )}
+        />
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={timeRanges}
+          keyExtractor={(t) => t.value}
+          contentContainerStyle={styles.chipsRow}
+          renderItem={({ item: t }) => (
+            <TouchableOpacity
+              style={[styles.chip, timeRange === t.value && styles.chipActive]}
+              onPress={() => setTimeRange(timeRange === t.value ? null : t.value)}
+            >
+              <Text style={[styles.chipText, timeRange === t.value && styles.chipTextActive]}>{t.label}</Text>
             </TouchableOpacity>
           )}
         />

@@ -3,7 +3,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import OfertasStack from './OfertasStack';
 import MisPedidosScreen from '../views/client/MisPedidosScreen';
-import PlaceholderScreen from '../views/PlaceholderScreen';
+import MiImpactoScreen from '../views/shared/MiImpactoScreen';
+import NotificacionesScreen from '../views/shared/NotificacionesScreen';
 import PerfilScreen from '../views/PerfilScreen';
 import { colors } from '../config/theme';
 
@@ -25,15 +26,13 @@ export default function ClientTabs() {
       />
       <Tab.Screen
         name="MiImpacto"
-        component={PlaceholderScreen}
+        component={MiImpactoScreen}
         options={{ title: 'Mi impacto', tabBarIcon: icon('leaf-outline') }}
-        initialParams={{ title: 'Mi impacto' }}
       />
       <Tab.Screen
         name="Notificaciones"
-        component={PlaceholderScreen}
+        component={NotificacionesScreen}
         options={{ tabBarIcon: icon('notifications-outline') }}
-        initialParams={{ title: 'Notificaciones' }}
       />
       <Tab.Screen
         name="Perfil"

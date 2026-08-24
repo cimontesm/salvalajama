@@ -1,7 +1,5 @@
 import client from '../api/client';
 
-import client from '../api/client';
-
 export async function getNotifications() {
   const { data } = await client.get('/notifications');
   return { items: data.data ?? [], unreadCount: data.unread_count ?? 0 };

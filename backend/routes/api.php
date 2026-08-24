@@ -30,13 +30,15 @@ Route::prefix('v1')->group(function () {
             Route::post('establishment/packages', [PackageController::class, 'store']);
             Route::put('establishment/packages/{package}', [PackageController::class, 'update']);
             Route::delete('establishment/packages/{package}', [PackageController::class, 'destroy']);
+
+            Route::get('establishment/reservations', [ReservationController::class, 'establishmentIndex']);
+            Route::patch('establishment/reservations/{reservation}/status', [ReservationController::class, 'updateStatus']);
         });
 
         Route::get('reservations', [ReservationController::class, 'index']);
         Route::get('reservations/{reservation}', [ReservationController::class, 'show']);
         Route::post('reservations', [ReservationController::class, 'store'])->middleware('role:cliente');
         Route::patch('reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])->middleware('role:cliente');
-        Route::patch('establishment/reservations/{reservation}/status', [ReservationController::class, 'updateStatus'])->middleware('role:establecimiento');
 
         Route::get('notifications', [NotificationController::class, 'index']);
         Route::patch('notifications/{notification}/read', [NotificationController::class, 'read']);
