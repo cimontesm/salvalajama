@@ -29,3 +29,5 @@ export async function deletePackage(id) {
   const { data } = await client.delete(`/establishment/packages/${id}`);
   return data;
 }
+
+// Cecilia Montes

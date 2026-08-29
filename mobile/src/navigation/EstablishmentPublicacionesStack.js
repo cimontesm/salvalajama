@@ -13,3 +13,5 @@ export default function EstablishmentPublicacionesStack() {
     <Stack.Screen name="EditarPublicacion" component={EditarPublicacionScreen} options={{ title: 'Editar publicación' }} />
   </Stack.Navigator>;
 }
+
+// Cecilia Montes

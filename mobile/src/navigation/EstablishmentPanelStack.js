@@ -11,3 +11,5 @@ export default function EstablishmentPanelStack() {
     <Stack.Screen name="NotificacionesInternas" component={NotificacionesScreen} options={{ title: 'Notificaciones' }} />
   </Stack.Navigator>;
 }
+
+// Cecilia Montes
