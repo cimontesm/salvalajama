@@ -1,18 +1,41 @@
 import client from '../api/client';
 
-const endpoint = '/establishments';
+export async function getEstablishments(filters = {}) {
+  const { data } = await client.get('/establishments', { params: filters });
+  return data.data;
+}
 
-const create = (data) => client.post(endpoint, data);
+export async function getEstablishment(id) {
+  const { data } = await client.get(`/establishments/${id}`);
+  return data.data;
+}
 
-const update = (id, data) => client.put(`${endpoint}/${id}`, data);
+// Autoservicio: el propio establecimiento del dueño autenticado (sin params).
+export async function getMyProfile() {
+  const { data } = await client.get('/establishment/profile');
+  return data.data;
+}
 
-const changeStatus = (id, status) => client.patch(`${endpoint}/${id}/status`, { status });
+export async function createEstablishment(payload) {
+  const { data } = await client.post('/establishments', payload);
+  return data.data;
+}
 
-const getProfile = (id) => client.get(`${endpoint}/${id}`);
+export async function updateEstablishment(id, payload) {
+  const { data } = await client.put(`/establishments/${id}`, payload);
+  return data.data;
+}
+
+export async function updateEstablishmentStatus(id, status) {
+  const { data } = await client.patch(`/establishments/${id}/status`, { status });
+  return data.data;
+}
 
 export default {
-    create,
-    update,
-    changeStatus,
-    getProfile
+  getEstablishments,
+  getEstablishment,
+  getMyProfile,
+  createEstablishment,
+  updateEstablishment,
+  updateEstablishmentStatus,
 };

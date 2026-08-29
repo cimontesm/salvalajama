@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { getPackages } from '../services/packages.service';
+import { CATEGORIES } from '../config/catalog';
 
-const CATEGORIES = ['panadería', 'supermercado', 'restaurante', 'cafetería'];
 const TIME_RANGES = [
   { value: 'manana', label: 'Mañana' },
   { value: 'tarde', label: 'Tarde' },

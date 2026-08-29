@@ -13,7 +13,7 @@ const icon = (name) => ({ color, size }) => <Ionicons name={name} size={size} co
 
 export default function ClientTabs() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: true, tabBarActiveTintColor: colors.primary }}>
+    <Tab.Navigator screenOptions={{ headerShown: false, tabBarActiveTintColor: colors.primary }}>
       <Tab.Screen
         name="OfertasTab"
         component={OfertasStack}

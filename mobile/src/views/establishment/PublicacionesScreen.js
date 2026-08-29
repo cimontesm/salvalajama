@@ -5,7 +5,8 @@ import React, { useCallback, useState } from 'react';
 import { colors, spacing, radius, typography } from '../../config/theme';
 import { useEstablishmentPackagesViewModel } from '../../viewmodels/useEstablishmentPackagesViewModel';
 import { deletePackage } from '../../services/packages.service';
-import { formatPrice, formatDate, formatTime } from '../../utils/formatters';
+import { formatPrice, formatDate, formatTime, capitalize, formatApiError } from '../../utils/formatters';
+import ListHeader from '../../components/ListHeader';
 
 const tabs = [
   ['active', 'Activas'],
@@ -24,18 +25,15 @@ export default function PublicacionesScreen({ navigation }) {
       { text: 'Cancelar', style: 'cancel' },
       { text: 'Eliminar', style: 'destructive', onPress: async () => {
         try { await deletePackage(item.id); reload(); }
-        catch (e) { Alert.alert('Error', e?.response?.data?.message ?? 'No se pudo eliminar.'); }
+        catch (e) { Alert.alert('Error', formatApiError(e, 'No se pudo eliminar.')); }
       } },
     ]);
   }
 
   return (
-    <SafeAreaView style={styles.safe} edges={['left', 'right']}>
+    <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <View style={styles.header}>
-        <View style={styles.titleRow}>
-          <View><Text style={styles.title}>Publicaciones</Text><Text style={styles.subtitle}>Gestiona tus ofertas y stock</Text></View>
-          <TouchableOpacity style={styles.add} onPress={() => navigation.navigate('CrearPublicacion')}><Text style={styles.addText}>+ Nueva</Text></TouchableOpacity>
-        </View>
+        <ListHeader title="Publicaciones" subtitle="Gestiona tus ofertas y stock" onAdd={() => navigation.navigate('CrearPublicacion')} addLabel="Nueva" />
         <View style={styles.tabs}>{tabs.map(([key, label]) => (
           <TouchableOpacity key={key} onPress={() => setSelected(key)} style={[styles.tab, selected === key && styles.tabActive]}>
             <Text style={[styles.tabText, selected === key && styles.tabTextActive]}>{label}</Text>
@@ -47,8 +45,8 @@ export default function PublicacionesScreen({ navigation }) {
           ListEmptyComponent={<Text style={styles.empty}>{error ?? 'No hay publicaciones en esta sección.'}</Text>}
           renderItem={({ item }) => (
             <View style={styles.card}>
-              <View style={styles.row}><Text style={styles.cardTitle}>{item.title}</Text><Text style={[styles.badge, item.status === 'activo' ? styles.good : styles.muted]}>{item.status}</Text></View>
-              <Text style={styles.detail}>{item.category} · {formatPrice(item.discounted_price)} · {item.discount_percent}% descuento</Text>
+              <View style={styles.row}><Text style={styles.cardTitle}>{item.title}</Text><Text style={[styles.badge, item.status === 'activo' ? styles.good : styles.muted]}>{capitalize(item.status)}</Text></View>
+              <Text style={styles.detail}>{capitalize(item.category)} · {formatPrice(item.discounted_price)} · {item.discount_percent}% descuento</Text>
               <Text style={styles.stock}>Stock: {item.quantity_available} / {item.quantity_total}</Text>
               <Text style={styles.detail}>Retiro: {formatTime(item.pickup_start)} - {formatTime(item.pickup_end)}</Text>
               {item.expires_at ? <Text style={styles.detail}>Vence: {formatDate(item.expires_at)}</Text> : null}

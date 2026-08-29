@@ -3,8 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import Screen from '../components/Screen';
 import { colors, spacing, typography, radius } from '../config/theme';
 
-// Pantalla "vacía" para el esqueleto de navegación del Sprint 0 (CLAUDE.md 6.1/7).
-// Cada sprint reemplaza esto por la pantalla real conectada a su viewmodel.
+// Pantalla vacía del esqueleto de navegación.
 export default function PlaceholderScreen({ route }) {
   const { title, note } = route.params ?? {};
   return (

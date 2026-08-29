@@ -12,7 +12,7 @@ const client = axios.create({
   },
 });
 
-// Inyecta el token JWT en cada request (Authorization: Bearer <token>).
+// Inyecta el token JWT en cada request.
 client.interceptors.request.use(async (config) => {
   const token = await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
   if (token) {
@@ -21,8 +21,7 @@ client.interceptors.request.use(async (config) => {
   return config;
 });
 
-// Callback opcional que AuthContext registra para reaccionar a un 401
-// (token vencido/ inválido) cerrando la sesión localmente.
+// Callback que AuthContext usa para cerrar sesión ante un 401.
 let onUnauthorized = null;
 export function setOnUnauthorized(handler) {
   onUnauthorized = handler;

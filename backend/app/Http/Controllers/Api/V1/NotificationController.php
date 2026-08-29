@@ -31,4 +31,20 @@ class NotificationController
         AppNotification::where('user_id', $request->user()->id)->whereNull('read_at')->update(['read_at' => now()]);
         return response()->json(['success' => true, 'message' => 'Notificaciones marcadas como leídas.']);
     }
+
+    /** Registra el token FCM/Expo del dispositivo. */
+    public function registerDeviceToken(Request $request)
+    {
+        $data = $request->validate([
+            'fcm_token' => 'required|string',
+            'platform' => 'nullable|string|max:20',
+        ]);
+
+        $request->user()->deviceTokens()->updateOrCreate(
+            ['fcm_token' => $data['fcm_token']],
+            ['platform' => $data['platform'] ?? 'android']
+        );
+
+        return response()->json(['success' => true, 'message' => 'Token registrado.']);
+    }
 }

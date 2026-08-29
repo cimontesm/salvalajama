@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-// Nombrado AppNotification (no "Notification") para no chocar con la clase
-// base de notificaciones de Laravel. La tabla física sigue siendo `notifications`.
+// Evita chocar con la clase Notification de Laravel; tabla `notifications`.
 class AppNotification extends Model
 {
     use HasFactory;

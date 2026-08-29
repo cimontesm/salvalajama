@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, SectionList, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, spacing, radius, typography } from '../../config/theme';
+import ListHeader from '../../components/ListHeader';
 import { useReservationsViewModel } from '../../viewmodels/useReservationsViewModel';
-import { formatPrice, formatDate } from '../../utils/formatters';
+import { formatPrice, formatDate, formatApiError } from '../../utils/formatters';
+import RatingModal from '../../components/RatingModal';
+import { createReview } from '../../services/reviews.service';
 
 const STATUS_LABEL = { reservado: 'Reservado', retirado: 'Retirado', cancelado: 'Cancelado' };
 
 export default function MisPedidosScreen() {
   const { active, history, isLoading, error, cancel, reload } = useReservationsViewModel();
+  const [ratingTarget, setRatingTarget] = useState(null);
 
   async function handleCancel(id) {
     Alert.alert('Cancelar reserva', '¿Seguro que quieres cancelarla? Se repone el stock.', [
@@ -20,11 +24,22 @@ export default function MisPedidosScreen() {
           try {
             await cancel(id);
           } catch (e) {
-            Alert.alert('Error', e?.response?.data?.message ?? 'No se pudo cancelar.');
+            Alert.alert('Error', formatApiError(e, 'No se pudo cancelar.'));
           }
         },
       },
     ]);
+  }
+
+  async function handleSubmitRating({ rating, comment }) {
+    try {
+      await createReview({ reservationId: ratingTarget.id, rating, comment });
+      setRatingTarget(null);
+      await reload();
+      Alert.alert('¡Gracias!', 'Tu calificación fue enviada.');
+    } catch (e) {
+      Alert.alert('Error', formatApiError(e, 'No se pudo enviar la calificación.'));
+    }
   }
 
   if (isLoading) {
@@ -41,13 +56,14 @@ export default function MisPedidosScreen() {
   ];
 
   return (
-    <SafeAreaView style={styles.safe} edges={['left', 'right']}>
+    <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <SectionList
         sections={sections}
         keyExtractor={(item) => String(item.id)}
         refreshing={isLoading}
         onRefresh={reload}
         contentContainerStyle={styles.list}
+        ListHeaderComponent={<ListHeader title="Mis pedidos" subtitle={`${active.length} activas · ${history.length} en historial`} />}
         renderSectionHeader={({ section }) => <Text style={styles.sectionTitle}>{section.title}</Text>}
         ListEmptyComponent={<Text style={styles.empty}>{error ?? 'Aún no tienes pedidos.'}</Text>}
         renderItem={({ item }) => (
@@ -64,8 +80,22 @@ export default function MisPedidosScreen() {
                 <Text style={styles.cancelButtonText}>Cancelar</Text>
               </TouchableOpacity>
             ) : null}
+            {item.status === 'retirado' && !item.review ? (
+              <TouchableOpacity style={styles.rateButton} onPress={() => setRatingTarget(item)}>
+                <Text style={styles.rateButtonText}>Calificar</Text>
+              </TouchableOpacity>
+            ) : null}
+            {item.status === 'retirado' && item.review ? (
+              <Text style={styles.reviewed}>Ya calificaste: {'★'.repeat(item.review.rating)}</Text>
+            ) : null}
           </View>
         )}
+      />
+      <RatingModal
+        visible={!!ratingTarget}
+        onCancel={() => setRatingTarget(null)}
+        onSubmit={handleSubmitRating}
+        title={ratingTarget ? `¿Cómo estuvo "${ratingTarget.package?.title}"?` : ''}
       />
     </SafeAreaView>
   );
@@ -98,5 +128,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
   },
   cancelButtonText: { color: colors.danger, fontWeight: '700', fontSize: 13 },
+  rateButton: {
+    marginTop: spacing.sm,
+    alignSelf: 'flex-start',
+    backgroundColor: colors.accent,
+    borderRadius: radius.sm,
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.md,
+  },
+  rateButtonText: { color: '#fff', fontWeight: '700', fontSize: 13 },
+  reviewed: { ...typography.caption, color: colors.accent, marginTop: spacing.sm, fontWeight: '700' },
   empty: { ...typography.body, color: colors.textMuted, textAlign: 'center', marginTop: spacing.xl },
 });

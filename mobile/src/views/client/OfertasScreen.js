@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import OfferCard from '../../components/OfferCard';
 import { colors, spacing, radius, typography } from '../../config/theme';
+import { capitalize } from '../../utils/formatters';
 import { useOffersViewModel } from '../../viewmodels/useOffersViewModel';
 
 export default function OfertasScreen({ navigation }) {
@@ -27,9 +29,14 @@ export default function OfertasScreen({ navigation }) {
   const priceOptions = [null, 3, 5, 10];
 
   return (
-    <SafeAreaView style={styles.safe} edges={['left', 'right']}>
+    <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <View style={styles.header}>
-        <Text style={styles.greeting}>Hola, Ana 🍽️</Text>
+        <View style={styles.greetingRow}>
+          <Text style={styles.greeting}>Hola, Ana 🍽️</Text>
+          <TouchableOpacity style={styles.mapButton} onPress={() => navigation.navigate('Mapa')} hitSlop={8}>
+            <Ionicons name="map-outline" size={22} color={colors.primary} />
+          </TouchableOpacity>
+        </View>
         <TextInput
           style={styles.search}
           placeholder="Buscar ofertas…"
@@ -47,7 +54,7 @@ export default function OfertasScreen({ navigation }) {
               style={[styles.chip, category === c && styles.chipActive]}
               onPress={() => setCategory(category === c ? null : c)}
             >
-              <Text style={[styles.chipText, category === c && styles.chipTextActive]}>{c}</Text>
+              <Text style={[styles.chipText, category === c && styles.chipTextActive]}>{capitalize(c)}</Text>
             </TouchableOpacity>
           )}
         />
@@ -109,7 +116,9 @@ export default function OfertasScreen({ navigation }) {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.background },
   header: { paddingHorizontal: spacing.lg, paddingTop: spacing.md },
+  greetingRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   greeting: { ...typography.h2, color: colors.text, marginBottom: spacing.sm },
+  mapButton: { padding: spacing.xs, borderRadius: radius.md, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, marginBottom: spacing.sm },
   search: {
     borderWidth: 1,
     borderColor: colors.border,

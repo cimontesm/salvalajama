@@ -2,9 +2,7 @@ import React from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text } from 'react-native';
 import { colors, spacing, typography } from '../config/theme';
 
-// Contenedor base reutilizable para las pantallas placeholder de Sprint 0.
-// Las pantallas reales de cada sprint reemplazan el contenido interno,
-// pero pueden seguir usando este wrapper para mantener consistencia visual.
+// Contenedor base reutilizable para las pantallas.
 export default function Screen({ title, subtitle, children }) {
   return (
     <SafeAreaView style={styles.safe}>

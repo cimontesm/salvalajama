@@ -8,7 +8,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // restaurando sesión al abrir la app
+  const [isLoading, setIsLoading] = useState(true);
 
   const clearSession = useCallback(async () => {
     await AsyncStorage.removeItem(TOKEN_STORAGE_KEY);
@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
     setUser(null);
   }, []);
 
-  // Restaura la sesión guardada (AsyncStorage) al abrir la app.
+  // Restaura la sesión guardada al abrir la app.
   useEffect(() => {
     (async () => {
       try {
@@ -34,7 +34,7 @@ export function AuthProvider({ children }) {
     })();
   }, [clearSession]);
 
-  // Si el api client detecta un 401, cerramos sesión localmente.
+  // Cierra sesión local ante un 401.
   useEffect(() => {
     setOnUnauthorized(() => {
       setToken(null);
@@ -62,7 +62,7 @@ export function AuthProvider({ children }) {
     try {
       await authService.logout();
     } catch (e) {
-      // Si falla la llamada (p. ej. sin red) igual cerramos sesión local.
+      // Sin red: igual cerramos sesión local.
     } finally {
       await clearSession();
     }

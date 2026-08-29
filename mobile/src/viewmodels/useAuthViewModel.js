@@ -1,8 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useAuth } from '../store/AuthContext';
 
-// ViewModel (MVVM) para las pantallas de Login/Register/Perfil.
-// La vista no llama a services/ directamente: pasa por este hook.
+// ViewModel para Login/Register/Perfil.
 export function useAuthViewModel() {
   const auth = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);

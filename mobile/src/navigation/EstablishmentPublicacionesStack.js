@@ -8,7 +8,7 @@ import { colors } from '../config/theme';
 const Stack = createNativeStackNavigator();
 export default function EstablishmentPublicacionesStack() {
   return <Stack.Navigator screenOptions={{ headerShown: true, headerTintColor: colors.primary }}>
-    <Stack.Screen name="ListaPublicaciones" component={PublicacionesScreen} options={{ title: 'Publicaciones' }} />
+    <Stack.Screen name="ListaPublicaciones" component={PublicacionesScreen} options={{ title: 'Publicaciones', headerShown: false }} />
     <Stack.Screen name="CrearPublicacion" component={CrearPublicacionScreen} options={{ title: 'Nueva publicación' }} />
     <Stack.Screen name="EditarPublicacion" component={EditarPublicacionScreen} options={{ title: 'Editar publicación' }} />
   </Stack.Navigator>;

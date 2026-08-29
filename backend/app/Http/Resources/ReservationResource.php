@@ -22,6 +22,11 @@ class ReservationResource extends JsonResource
             'pickup_deadline' => $this->pickup_deadline,
             'picked_up_at' => $this->picked_up_at,
             'created_at' => $this->created_at,
+            'review' => $this->whenLoaded('review', fn () => $this->review ? [
+                'id' => $this->review->id,
+                'rating' => $this->review->rating,
+                'comment' => $this->review->comment,
+            ] : null),
         ];
     }
 }

@@ -2,12 +2,12 @@ import client from '../api/client';
 
 export async function createReservation(packageId, quantity = 1) {
   const { data } = await client.post('/reservations', { package_id: packageId, quantity });
-  return data.data; // reservation
+  return data.data;
 }
 
 export async function getMyReservations() {
   const { data } = await client.get('/reservations');
-  return data.data; // { active: [...], history: [...] }
+  return data.data;
 }
 
 export async function cancelReservation(id) {
@@ -17,7 +17,7 @@ export async function cancelReservation(id) {
 
 export async function getEstablishmentReservations() {
   const { data } = await client.get('/establishment/reservations');
-  return data.data; // { pending: [...], history: [...] }
+  return data.data;
 }
 
 export async function updateReservationStatus(id, status) {
