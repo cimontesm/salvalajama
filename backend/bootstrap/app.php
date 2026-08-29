@@ -21,7 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        // Respuestas JSON uniformes para la API (ver formato en CLAUDE.md 4).
+        // Respuestas JSON uniformes para la API.
         $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, $request) {
             if ($request->is('api/*')) {
                 return response()->json([

@@ -1,8 +1,7 @@
 # Salva la Jama — Mobile (Expo / React Native)
 
-App Android del proyecto **Salva la Jama** (ver `/CLAUDE.md` en la raíz del repo). Generado
-con `create-expo-app` (template blank) + las dependencias exactas de CLAUDE.md 6.1, con la
-estructura de carpetas MVVM de la sección 6.2.
+App Android del proyecto **Salva la Jama**. Creada con `create-expo-app` (template blank)
+más las dependencias definidas para el proyecto, con estructura de carpetas MVVM.
 
 ## Puesta en marcha
 
@@ -21,7 +20,7 @@ Con el emulador Android abierto, presiona `a` en la terminal de Expo (o `npm run
 - `app.json` → `expo.android.googleServicesFile`: coloca tu `google-services.json`
   (Firebase) en `mobile/google-services.json` para que FCM funcione.
 - **FCM no funciona en Expo Go.** Requiere un development build:
-  `eas build --profile development --platform android` (ver CLAUDE.md 6.1 y 10).
+  `eas build --profile development --platform android`.
 - La URL de la API (`expo.extra.apiBaseUrl` en `app.json`) ya apunta a
   `http://10.0.2.2:8000/api/v1` (localhost del backend visto desde el emulador Android).
   Cámbiala si usas un dispositivo físico (IP de tu PC en la red local).
@@ -38,17 +37,17 @@ Con el emulador Android abierto, presiona `a` en la terminal de Expo (o `npm run
   register, logout, restauración de sesión con AsyncStorage.
 - `src/navigation/RootNavigator.js`: decide el flujo según `role` (cliente / establecimiento
   / administrador), con `AuthStack` (Login/Register) cuando no hay sesión.
-- Tabs por rol (`ClientTabs`, `EstablishmentTabs`, `AdminTabs`) con las pantallas de
-  CLAUDE.md 6.3, como placeholders listos para que cada sprint las reemplace.
+- Tabs por rol (`ClientTabs`, `EstablishmentTabs`, `AdminTabs`) con las pantallas
+  previstas para cada rol, como placeholders listos para que cada sprint las reemplace.
 - `LoginScreen` y `RegisterScreen` funcionales end-to-end contra el backend (`/auth/login`,
   `/auth/register`).
 - `PerfilScreen` compartida por los tres roles, con cierre de sesión funcional.
 
-## Qué falta (siguientes sprints — ver CLAUDE.md sección 7)
+## Qué falta (siguientes sprints)
 
 Las pantallas reales de catálogo, reservas, publicaciones, pedidos, reportes, reseñas,
 notificaciones, impacto y administración quedan para los Sprints 1-5, según el reparto de
-la sección 1. Los archivos `src/services/*.service.js` (excepto `auth.service.js`) están
+módulos por integrante. Los archivos `src/services/*.service.js` (excepto `auth.service.js`) están
 como stub, listos para que cada quien agregue sus llamadas a la API.
 
 ## Verificación rápida

@@ -1,4 +1,4 @@
-// Catálogos compartidos de la app (CLAUDE.md): fuente única de verdad para
+// Catálogos compartidos de la app: fuente única de verdad para
 // categorías de establecimientos/publicaciones y ciudades, así se evita que
 // un mismo valor quede guardado con mayúsculas/minúsculas distintas según
 // quién lo escriba, y los filtros del catálogo de ofertas siempre calzan

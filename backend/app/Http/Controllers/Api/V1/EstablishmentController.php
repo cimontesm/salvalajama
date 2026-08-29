@@ -9,7 +9,7 @@ use Illuminate\Validation\Rule;
 
 class EstablishmentController
 {
-    /** Catálogo de establecimientos (CLAUDE.md 5.5): filtros category, q, status. */
+    /** Catálogo de establecimientos: filtros category, q, status. */
     public function index(Request $request)
     {
         $query = Establishment::query()->withCount('packages')->withAvg('reviews', 'rating');
