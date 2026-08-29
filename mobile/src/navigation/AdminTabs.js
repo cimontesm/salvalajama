@@ -1,7 +1,10 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
-import PlaceholderScreen from '../views/PlaceholderScreen';
+import UsuariosScreen from '../views/admin/UsuariosScreen';
+import EstablecimientosScreen from '../views/admin/EstablecimientosScreen';
+import PublicacionesScreen from '../views/admin/PublicacionesScreen';
+import MonitoreoScreen from '../views/admin/MonitoreoScreen';
 import PerfilScreen from '../views/PerfilScreen';
 import { colors } from '../config/theme';
 
@@ -11,11 +14,11 @@ const icon = (name) => ({ color, size }) => <Ionicons name={name} size={size} co
 export default function AdminTabs() {
   return (
     <Tab.Navigator screenOptions={{ headerShown: true, tabBarActiveTintColor: colors.primary }}>
-      <Tab.Screen name="Usuarios" component={PlaceholderScreen} initialParams={{ title: 'Usuarios' }} options={{ tabBarIcon: icon('people-outline') }} />
-      <Tab.Screen name="Establecimientos" component={PlaceholderScreen} initialParams={{ title: 'Establecimientos' }} options={{ tabBarIcon: icon('storefront-outline') }} />
-      <Tab.Screen name="Publicaciones" component={PlaceholderScreen} initialParams={{ title: 'Publicaciones' }} options={{ tabBarIcon: icon('list-outline') }} />
-      <Tab.Screen name="Monitoreo" component={PlaceholderScreen} initialParams={{ title: 'Monitoreo' }} options={{ tabBarIcon: icon('stats-chart-outline') }} />
-      <Tab.Screen name="Perfil" component={PerfilScreen} options={{ tabBarIcon: icon('person-outline') }} />
+      <Tab.Screen name="Usuarios" component={UsuariosScreen} options={{ headerShown: false, tabBarIcon: icon('people-outline') }} />
+      <Tab.Screen name="Establecimientos" component={EstablecimientosScreen} options={{ headerShown: false, tabBarIcon: icon('storefront-outline') }} />
+      <Tab.Screen name="Publicaciones" component={PublicacionesScreen} options={{ headerShown: false, tabBarIcon: icon('list-outline') }} />
+      <Tab.Screen name="Monitoreo" component={MonitoreoScreen} options={{ headerShown: false, tabBarIcon: icon('stats-chart-outline') }} />
+      <Tab.Screen name="Perfil" component={PerfilScreen} options={{ headerShown: false, tabBarIcon: icon('person-outline') }} />
     </Tab.Navigator>
   );
 }

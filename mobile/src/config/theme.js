@@ -1,5 +1,4 @@
-// Identidad visual de Salva la Jama (CLAUDE.md 6.5): verde de marca,
-// acentos naranja para descuentos, fondo claro, tarjetas de bordes suaves.
+// Identidad visual de Salva la Jama.
 export const colors = {
   primary: '#2E7D32',
   primaryDark: '#1B5E20',

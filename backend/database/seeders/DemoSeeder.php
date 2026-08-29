@@ -14,7 +14,7 @@ class DemoSeeder extends Seeder
 {
     public function run(): void
     {
-        // --- Usuarios base ---
+        // Usuarios
         $ana = User::create([
             'name' => 'Ana Salazar',
             'email' => 'ana@demo.ec',
@@ -60,7 +60,7 @@ class DemoSeeder extends Seeder
             'city' => 'Guayaquil',
         ]);
 
-        // --- Establecimientos ---
+        // Establecimientos
         $panaderia = Establishment::create([
             'user_id' => $duenoPanaderia->id,
             'name' => 'Panadería La Espiga',
@@ -97,7 +97,7 @@ class DemoSeeder extends Seeder
             'status' => 'aprobado',
         ]);
 
-        // --- Paquetes ---
+        // Paquetes
         $fundaPan = Package::create([
             'establishment_id' => $panaderia->id,
             'title' => 'Funda sorpresa de pan',
@@ -194,8 +194,8 @@ class DemoSeeder extends Seeder
             'status' => 'activo',
         ]);
 
-        // --- Reservas ---
-        // Una reserva activa (SLJ-4902) de Ana.
+        // Reservas
+        // Reserva activa de Ana.
         Reservation::create([
             'code' => 'SLJ-4902',
             'user_id' => $ana->id,
@@ -208,7 +208,7 @@ class DemoSeeder extends Seeder
             'pickup_deadline' => now()->setTime(20, 0),
         ]);
 
-        // Dos reservas retiradas con reseña, para poblar "Mis pedidos" (historial).
+        // Reservas retiradas con reseña.
         $retirada1 = Reservation::create([
             'code' => 'SLJ-4830',
             'user_id' => $ana->id,

@@ -10,15 +10,16 @@ use Illuminate\Validation\Rule;
 
 class PackageController
 {
-    /**
-     * Catálogo de ofertas. Filtros soportados (CLAUDE.md 5.5):
-     * category, establishment_id, min_price, max_price, lat, lng, radius_km,
-     * available=true, q (búsqueda por título/descripción), time_range
-     * (mañana|tarde|noche, según la hora de pickup_start).
-     */
+    /** Catálogo de ofertas con filtros (categoría, precio, cercanía, franja, etc.). */
     public function index(Request $request)
     {
         $query = Package::query()->with('establishment');
+
+        // Solo publicaciones de establecimientos aprobados: si un establecimiento
+        // es suspendido, sus publicaciones dejan de aparecer en el catálogo.
+        $query->whereHas('establishment', function ($q) {
+            $q->where('status', 'aprobado');
+        });
 
         if ($request->filled('category')) {
             $query->where('category', $request->string('category'));
@@ -63,7 +64,7 @@ class PackageController
             }
         }
 
-        // Búsqueda por cercanía (fórmula de Haversine) si se envían lat/lng/radius_km.
+        // Cercanía por Haversine si llegan lat/lng.
         if ($request->filled('lat') && $request->filled('lng')) {
             $lat = $request->float('lat');
             $lng = $request->float('lng');
@@ -81,9 +82,19 @@ class PackageController
         return PackageResource::collection($packages)->additional(['success' => true]);
     }
 
-    public function show(Package $package)
+    public function show(Request $request, Package $package)
     {
         $package->load('establishment');
+
+        $user = $request->user();
+        $isOwner = $user && $user->establishment?->id === $package->establishment_id;
+        $isAdmin = $user && $user->role === 'administrador';
+
+        // Si el establecimiento no está aprobado (p. ej. fue suspendido), solo su
+        // propio dueño o un administrador pueden seguir viendo la publicación.
+        if ($package->establishment->status !== 'aprobado' && ! $isOwner && ! $isAdmin) {
+            return response()->json(['success' => false, 'message' => 'Esta publicación ya no está disponible.'], 404);
+        }
 
         return response()->json([
             'success' => true,
@@ -156,7 +167,7 @@ class PackageController
     {
         $this->authorizePackage($request, $package);
 
-        // Si ya existen reservas, no eliminamos físicamente el registro para no romper el historial.
+        // Con reservas: se desactiva, no se borra.
         if ($package->reservations()->exists()) {
             $package->update(['status' => 'inactivo']);
             return response()->json(['success' => true, 'message' => 'La publicación fue desactivada y se conserva su historial.']);
@@ -180,7 +191,8 @@ class PackageController
             'pickup_start' => [$updating ? 'sometimes' : 'required', 'date'],
             'pickup_end' => [$updating ? 'sometimes' : 'required', 'date', 'after:pickup_start'],
             'expires_at' => ['nullable', 'date'],
-            'image_url' => ['nullable', 'url', 'max:2048'],
+            // Acepta URL o imagen en base64.
+            'image_url' => ['nullable', 'string', 'max:5000000'],
             'status' => ['sometimes', Rule::in(['activo', 'agotado', 'vencido', 'inactivo'])],
         ];
 

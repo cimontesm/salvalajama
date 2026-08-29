@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, FlatList, 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, spacing, radius, typography } from '../../config/theme';
 import { useEstablishmentReservationsViewModel } from '../../viewmodels/useEstablishmentReservationsViewModel';
-import { formatPrice, formatTime } from '../../utils/formatters';
+import { formatPrice, formatTime, capitalize, formatApiError } from '../../utils/formatters';
+import ListHeader from '../../components/ListHeader';
 
 export default function PedidosScreen() {
   const { pending, history, isLoading, error, reload, updateStatus } = useEstablishmentReservationsViewModel();
@@ -11,16 +12,16 @@ export default function PedidosScreen() {
     const text = status === 'retirado' ? 'confirmar que el cliente retiró el pedido' : 'cancelar el pedido';
     Alert.alert('Actualizar pedido', `¿Quieres ${text}?`, [
       { text: 'No', style: 'cancel' },
-      { text: 'Sí', style: status === 'cancelado' ? 'destructive' : 'default', onPress: async () => { try { await updateStatus(item.id, status); } catch (e) { Alert.alert('Error', e?.response?.data?.message ?? 'No se pudo actualizar.'); } } },
+      { text: 'Sí', style: status === 'cancelado' ? 'destructive' : 'default', onPress: async () => { try { await updateStatus(item.id, status); } catch (e) { Alert.alert('Error', formatApiError(e, 'No se pudo actualizar.')); } } },
     ]);
   }
   const sections = [...pending.map(x => ({ ...x, section: 'Pendientes' })), ...history.map(x => ({ ...x, section: 'Historial' }))];
-  return <SafeAreaView style={styles.safe} edges={['left', 'right']}>
+  return <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
     <FlatList data={sections} keyExtractor={item => String(item.id)} refreshing={isLoading} onRefresh={reload} contentContainerStyle={styles.list}
-      ListHeaderComponent={<View><Text style={styles.title}>Pedidos recibidos</Text><Text style={styles.subtitle}>{pending.length} pendientes · {history.length} en historial</Text></View>}
+      ListHeaderComponent={<ListHeader title="Pedidos recibidos" subtitle={`${pending.length} pendientes · ${history.length} en historial`} />}
       ListEmptyComponent={<Text style={styles.empty}>{error ?? 'Aún no has recibido pedidos.'}</Text>}
       renderItem={({ item }) => <View style={styles.card}>
-        <View style={styles.row}><Text style={styles.code}>{item.code}</Text><Text style={styles.status}>{item.status}</Text></View>
+        <View style={styles.row}><Text style={styles.code}>{item.code}</Text><Text style={styles.status}>{capitalize(item.status)}</Text></View>
         <Text style={styles.titleCard}>{item.package?.title}</Text>
         <Text style={styles.detail}>Cliente: {item.user?.name ?? 'Cliente'}</Text>
         {item.user?.phone ? <Text style={styles.detail}>Teléfono: {item.user.phone}</Text> : null}

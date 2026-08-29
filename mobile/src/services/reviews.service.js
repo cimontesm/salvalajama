@@ -1,7 +1,17 @@
 import client from '../api/client';
 
-// TODO(sprint): implementar llamadas reales a /reviews (ver CLAUDE.md 5.5).
-// Se deja el cliente ya importado para que el siguiente sprint solo agregue
-// las funciones (getReviews, create..., etc.) sin tocar api/client.js.
+export async function getEstablishmentReviews(establishmentId) {
+  const { data } = await client.get(`/establishments/${establishmentId}/reviews`);
+  return data.data;
+}
 
-export default client;
+export async function createReview({ reservationId, rating, comment }) {
+  const { data } = await client.post('/reviews', {
+    reservation_id: reservationId,
+    rating,
+    comment,
+  });
+  return data.data;
+}
+
+export default { getEstablishmentReviews, createReview };

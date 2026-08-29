@@ -14,13 +14,11 @@ use Illuminate\Validation\Rule;
 
 class ReservationController
 {
-    /**
-     * "Mis pedidos": reservas activas + historial del cliente autenticado.
-     */
+    /** "Mis pedidos": activas + historial del cliente. */
     public function index(Request $request)
     {
         $reservations = Reservation::query()
-            ->with(['package', 'establishment'])
+            ->with(['package', 'establishment', 'review'])
             ->where('user_id', $request->user()->id)
             ->orderByDesc('created_at')
             ->get();
@@ -34,9 +32,7 @@ class ReservationController
         ]);
     }
 
-    /**
-     * Pedidos recibidos por el establecimiento autenticado (pendientes + historial).
-     */
+    /** Pedidos recibidos por el establecimiento. */
     public function establishmentIndex(Request $request)
     {
         $establishment = $request->user()->establishment;
@@ -66,7 +62,7 @@ class ReservationController
             return response()->json(['success' => false, 'message' => 'No tienes permiso para ver esta reserva.'], 403);
         }
 
-        $reservation->load(['package', 'establishment', 'user']);
+        $reservation->load(['package', 'establishment', 'user', 'review']);
 
         return response()->json([
             'success' => true,
@@ -74,10 +70,7 @@ class ReservationController
         ]);
     }
 
-    /**
-     * Reservar un paquete: baja el inventario automáticamente y genera el
-     * código SLJ-####. Devuelve 409 si no hay stock (CLAUDE.md 1.4 y 5.5).
-     */
+    /** Reserva un paquete: baja stock, genera SLJ-####, 409 sin stock. */
     public function store(CreateReservationRequest $request)
     {
         $quantity = $request->validated('quantity', 1);
@@ -85,7 +78,14 @@ class ReservationController
         try {
             $reservation = DB::transaction(function () use ($request, $quantity) {
                 /** @var Package $package */
-                $package = Package::query()->lockForUpdate()->findOrFail($request->validated('package_id'));
+                $package = Package::query()->with('establishment')->lockForUpdate()->findOrFail($request->validated('package_id'));
+
+                // Un establecimiento suspendido (o aún no aprobado) no puede recibir reservas nuevas.
+                if ($package->establishment?->status !== 'aprobado') {
+                    throw ValidationException::withMessages([
+                        'package_id' => ['Este establecimiento no está disponible actualmente.'],
+                    ])->status(409);
+                }
 
                 if ($package->status !== 'activo' || $package->quantity_available < $quantity) {
                     throw ValidationException::withMessages([
@@ -153,9 +153,7 @@ class ReservationController
         ], 201);
     }
 
-    /**
-     * Cancela la reserva y repone el stock del paquete.
-     */
+    /** Cancela la reserva y repone el stock. */
     public function cancel(Request $request, Reservation $reservation)
     {
         if ($reservation->user_id !== $request->user()->id) {

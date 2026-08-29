@@ -8,8 +8,9 @@
     "userInterfaceStyle": "light",
     "scheme": "salvalajama",
     "extra": {
-      "apiBaseUrl": "http://192.168.100.104:8000/api/v1",
-      "googleMapsApiKey": ""
+      "eas": {
+        "projectId": "b42c1eba-5921-43a7-8877-60b48729a492"
+      }
     },
     "ios": {
       "supportsTablet": true,
@@ -31,6 +32,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "owner": "reload27"
   }
 }

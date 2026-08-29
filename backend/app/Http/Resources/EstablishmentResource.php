@@ -11,6 +11,7 @@ class EstablishmentResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'user_id' => $this->user_id,
             'name' => $this->name,
             'description' => $this->description,
             'category' => $this->category,
@@ -20,6 +21,11 @@ class EstablishmentResource extends JsonResource
             'opening_hours' => $this->opening_hours,
             'logo_url' => $this->logo_url,
             'status' => $this->status,
+            'packages_count' => $this->when(isset($this->packages_count), (int) $this->packages_count),
+            'average_rating' => $this->when(
+                $this->reviews_avg_rating !== null,
+                fn () => round((float) $this->reviews_avg_rating, 1)
+            ),
         ];
     }
 }

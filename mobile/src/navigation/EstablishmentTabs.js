@@ -16,9 +16,9 @@ export default function EstablishmentTabs() {
     <Tab.Navigator screenOptions={{ headerShown: false, tabBarActiveTintColor: colors.primary }}>
       <Tab.Screen name="Panel" component={EstablishmentPanelStack} options={{ tabBarIcon: icon('grid-outline') }} />
       <Tab.Screen name="Publicaciones" component={EstablishmentPublicacionesStack} options={{ tabBarIcon: icon('megaphone-outline') }} />
-      <Tab.Screen name="Pedidos" component={PedidosScreen} options={{ headerShown: true, title: 'Pedidos', tabBarIcon: icon('receipt-outline') }} />
-      <Tab.Screen name="Reportes" component={ReportesScreen} options={{ headerShown: true, title: 'Reportes', tabBarIcon: icon('bar-chart-outline') }} />
-      <Tab.Screen name="Perfil" component={PerfilScreen} options={{ headerShown: true, tabBarIcon: icon('person-outline') }} />
+      <Tab.Screen name="Pedidos" component={PedidosScreen} options={{ headerShown: false, title: 'Pedidos', tabBarIcon: icon('receipt-outline') }} />
+      <Tab.Screen name="Reportes" component={ReportesScreen} options={{ headerShown: false, title: 'Reportes', tabBarIcon: icon('bar-chart-outline') }} />
+      <Tab.Screen name="Perfil" component={PerfilScreen} options={{ headerShown: false, tabBarIcon: icon('person-outline') }} />
     </Tab.Navigator>
   );
 }

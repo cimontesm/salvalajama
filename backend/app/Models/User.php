@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -83,7 +82,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->role === self::ROLE_ADMINISTRADOR;
     }
 
-    // --- Contrato JWTSubject (php-open-source-saver/jwt-auth) ---
+    // Contrato JWTSubject.
 
     public function getJWTIdentifier()
     {

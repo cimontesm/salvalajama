@@ -7,8 +7,8 @@ import { colors } from '../config/theme';
 const Stack = createNativeStackNavigator();
 export default function EstablishmentPanelStack() {
   return <Stack.Navigator screenOptions={{ headerShown: true, headerTintColor: colors.primary }}>
-    <Stack.Screen name="PanelInicio" component={PanelScreen} options={{ title: 'Panel' }} />
-    <Stack.Screen name="NotificacionesInternas" component={NotificacionesScreen} options={{ title: 'Notificaciones' }} />
+    <Stack.Screen name="PanelInicio" component={PanelScreen} options={{ title: 'Panel', headerShown: false }} />
+    <Stack.Screen name="NotificacionesInternas" component={NotificacionesScreen} options={{ title: 'Notificaciones', headerShown: false }} />
   </Stack.Navigator>;
 }
 

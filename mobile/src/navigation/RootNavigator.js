@@ -8,8 +8,7 @@ import EstablishmentTabs from './EstablishmentTabs';
 import AdminTabs from './AdminTabs';
 import { colors } from '../config/theme';
 
-// Tras el login, lee `role` del AuthContext y monta el stack de tabs
-// correspondiente (CLAUDE.md 6.3). Sin sesión: AuthStack (Login/Register).
+// Monta el stack de tabs según el rol; sin sesión, AuthStack.
 export default function RootNavigator() {
   const { isAuthenticated, isLoading, role } = useAuth();
 

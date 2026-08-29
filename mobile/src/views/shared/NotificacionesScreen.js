@@ -7,7 +7,7 @@ import { formatDate } from '../../utils/formatters';
 
 export default function NotificacionesScreen() {
   const { items, unreadCount, isLoading, reload, markRead, markAllRead } = useNotificationsViewModel();
-  return <SafeAreaView style={styles.safe}><FlatList data={items} keyExtractor={item => String(item.id)} refreshing={isLoading} onRefresh={reload} contentContainerStyle={styles.list}
+  return <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}><FlatList data={items} keyExtractor={item => String(item.id)} refreshing={isLoading} onRefresh={reload} contentContainerStyle={styles.list}
     ListHeaderComponent={<View style={styles.header}><View><Text style={styles.title}>Notificaciones</Text><Text style={styles.subtitle}>{unreadCount} sin leer</Text></View>{unreadCount > 0 ? <TouchableOpacity onPress={markAllRead}><Text style={styles.readAll}>Marcar todas</Text></TouchableOpacity> : null}</View>}
     ListEmptyComponent={isLoading ? <ActivityIndicator size="large" color={colors.primary} /> : <Text style={styles.empty}>No tienes notificaciones.</Text>}
     renderItem={({ item }) => <TouchableOpacity style={[styles.card, !item.read_at && styles.unread]} onPress={() => !item.read_at && markRead(item.id)}><Text style={styles.cardTitle}>{item.title}</Text><Text style={styles.body}>{item.body}</Text><Text style={styles.date}>{formatDate(item.created_at)}</Text></TouchableOpacity>}

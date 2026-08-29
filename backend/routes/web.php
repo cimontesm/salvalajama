@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-// API-only: no hay frontend Blade. Esta ruta solo confirma que el backend responde.
+// Healthcheck; el frontend usa /api/v1.
 Route::get('/', function () {
     return response()->json([
         'success' => true,
