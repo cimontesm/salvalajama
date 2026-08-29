@@ -8,8 +8,6 @@
     "userInterfaceStyle": "light",
     "scheme": "salvalajama",
     "extra": {
-      "apiBaseUrl": "https://underdone-lunchroom-luxurious.ngrok-free.dev/api/v1",
-      "googleMapsApiKey": "",
       "eas": {
         "projectId": "b42c1eba-5921-43a7-8877-60b48729a492"
       }
