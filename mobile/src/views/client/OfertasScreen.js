@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
 import OfferCard from '../../components/OfferCard';
 import { colors, spacing, radius, typography } from '../../config/theme';
 import { capitalize } from '../../utils/formatters';
@@ -31,12 +30,7 @@ export default function OfertasScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <View style={styles.header}>
-        <View style={styles.greetingRow}>
-          <Text style={styles.greeting}>Hola, Ana 🍽️</Text>
-          <TouchableOpacity style={styles.mapButton} onPress={() => navigation.navigate('Mapa')} hitSlop={8}>
-            <Ionicons name="map-outline" size={22} color={colors.primary} />
-          </TouchableOpacity>
-        </View>
+        <Text style={styles.greeting}>Hola, Ana 🍽️</Text>
         <TextInput
           style={styles.search}
           placeholder="Buscar ofertas…"
@@ -116,9 +110,7 @@ export default function OfertasScreen({ navigation }) {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.background },
   header: { paddingHorizontal: spacing.lg, paddingTop: spacing.md },
-  greetingRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   greeting: { ...typography.h2, color: colors.text, marginBottom: spacing.sm },
-  mapButton: { padding: spacing.xs, borderRadius: radius.md, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, marginBottom: spacing.sm },
   search: {
     borderWidth: 1,
     borderColor: colors.border,
